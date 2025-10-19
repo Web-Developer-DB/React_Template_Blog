@@ -33,8 +33,10 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <HelmetProvider>
-      {/* Aktiviert die neue (bald standardmäßige) Behandlung relativer Splat-Routen */}
-      <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
+      {/* Opt-in für kommende Router-Verhaltensweisen (Splat-Resolution, startTransition) */}
+      <BrowserRouter
+        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+      >
         <App />
       </BrowserRouter>
     </HelmetProvider>

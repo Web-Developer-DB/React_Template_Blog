@@ -148,6 +148,7 @@ Previews für Pull Requests sind empfehlenswert, damit Reviewer UI-Änderungen d
 - **Keine Auto-Hashtags?** Eventuell enthält der Text nur Stopwörter – erweitere `stopwords.de.txt`.
 - **Dark-Mode flackert beim Laden?** Stelle sicher, dass `localStorage` Zugriff hat (kein strenger Privacy-Modus) und lade die Seite neu.
 - **Sitemap/RSS fehlen?** `npm run build` erneut ausführen; das Script legt Dateien im `dist` Ordner ab.
+- **Hinweis zu React Router Warnungen:** Wir haben die `future`-Flags `v7_relativeSplatPath` und `v7_startTransition` bereits aktiviert (siehe `src/main.jsx`), damit erscheinen in der Konsole keine Deprecation-Hinweise. Falls du weitere Router-Warnungen siehst, prüfe, ob du die gleichen Flags gesetzt hast.
 
 ## Lizenz
 
