@@ -2,240 +2,271 @@
 
 ---
 
-# 🧠 Entwickler-Prompt für Codex-Agent (REACT • JavaScript • CSS • Lehrmodus)
-
-**Einsprachig: Deutsch**
-**Lehrmodus:** Ausführlich kommentierter Code (Datei-Header, JSDoc/TSDoc-ähnliche Kommentare, Inline-Erklärungen & „Gotchas“).
-
-## 🎯 Projektziele
-
-Erzeuge ein **React-Projekt** (Vite), das sofort startet und folgende Funktionen bietet:
-
-* **Automatisches Theming** (Light/Dark/System; `prefers-contrast`, `prefers-reduced-motion`, dynamisches `<meta name="theme-color">`)
-* **Responsives Layout** (Mobile-First, CSS Breakpoints, **Container-Queries**, **Fluid Typography** via `clamp()`)
-* **Content-Autodiscovery** für `*.md`, `*.mdx` und **optional** `*.jsx` via `import.meta.glob`
-* **Hashtags** (Frontmatter + **Auto-Extraktion**) & **Themen-Tags** (Topics)
-* **Clientseitige Suche** (Fuse.js) über Titel, Auszug/Body, Hashtags, Topics
-* **SEO** (Meta/OG/Twitter), **Sitemap**, **RSS**, **JSON-LD**
-* **Tests & CI** (Vitest + React Testing Library, Playwright, axe/pa11y)
-* **~10 Beispiel-Posts** (realistische Inhalte, 200–600 Wörter, verschiedene Topics/Tags)
-* **Umfangreiche README.md** + `/docs`-Tutorials
-* **Ohne TypeScript, ohne Tailwind** ⇒ **nur React + JavaScript + CSS**
-
-## 🧩 Tech-Stack
-
-* **Build/Dev:** Vite (React)
-* **UI:** React 18, **React Router** für Routing
-* **Inhalte:** Markdown (`.md`) & **MDX** (`.mdx`) via `@mdx-js/react` / Vite-MDX-Plugin
-* **Stil:** **pures CSS** (Module + globale Styles), CSS-Variablen für Theme
-* **Suche:** Fuse.js
-* **SEO:** `react-helmet-async` (oder gleichwertig)
-* **Tests:** Vitest + @testing-library/react, Playwright (E2E), axe/pa11y (A11y)
-* **CI:** GitHub Actions (Lint → Build → Tests → A11y)
-* **Deployment:** Vercel (statisches Export-Build), `vercel.json` optional
-
-## 🗂️ Projektstruktur (Vorgabe)
-
-```
-/src
-  /routes
-    /blog/[slug].jsx          # Detailseite
-    /blog/index.jsx           # Liste
-    /tags/index.jsx           # Tag-/Topic-Übersicht & Filter
-    /search/index.jsx         # Suche
-    /_layout/Layout.jsx       # App-Layout (Shell)
-    /_layout/Seo.jsx          # SEO-Komponente (Helmet)
-  /components
-    ContentCard.jsx
-    TagChips.jsx
-    ThemeToggle.jsx
-    SearchBar.jsx
-    SearchResults.jsx
-    MobileNav.jsx
-    DesktopNav.jsx
-  /lib/content
-    index.js                  # Scan & Index (stark kommentiert)
-    hashtag.js                # Auto-Hashtags (stark kommentiert)
-    stopwords.de.txt
-  /styles
-    globals.css               # Variablen, Resets, Utilities
-    layout.css                # Layout, Grid/Container, Nav
-    typography.css            # Fluid Type, Prosa, Code
-    components.css            # Chips, Cards, Badges, etc.
-  main.jsx
-  App.jsx
-/content
-  /blog/...                   # ~10 Beispielposts (.md/.mdx, 1–2 .jsx)
-/public/images/...
-/tests
-  unit/hashtag.test.js
-  e2e/search.spec.js
-/docs
-  01-uebersicht.md
-  02-architektur.md
-  03-content-workflow.md
-  04-styling-und-theming.md
-  05-suche-und-filter.md
-```
-
-> **Routing-Konvention:** React Router mit `BrowserRouter`. Ordner `/routes` dient der Übersicht; `main.jsx` bindet `<Layout>` und konfiguriert alle Routen.
-
-## 🔧 Kernanforderungen (React/JS/CSS)
-
-### 1) Responsives Layout
-
-* **CSS Breakpoints:** `@media (min-width: 640px | 768px | 1024px | 1280px | 1536px)`
-* **Container-Queries:** `@container` für Karten/Listen
-* **Fluid Typography:** `font-size: clamp(min, vw, max)`
-* **Navigation:**
-
-  * `<MobileNav>`: Bottom-Bar **unter** `lg`
-  * `<DesktopNav>`: Sidebar **ab** `lg`
-* **A11y:** Fokus-Styles, Landmark-Regions (`header`, `nav`, `main`, `footer`)
-
-### 2) Automatisches Theming
-
-* **CSS-Variablen** in `:root` und `[data-theme="dark"]`
-* **Systemerkennung:** `prefers-color-scheme`
-* **Manueller Toggle:** `<ThemeToggle>` + Persistenz via `localStorage`
-* **Meta Theme Color:** dynamisch je Theme (per `react-helmet-async`)
-* **Respektiere:** `prefers-contrast: more` & `prefers-reduced-motion: reduce`
-
-### 3) Content-Autodiscovery & Datenmodell
-
-* **Import:**
-
-  ```js
-  const modules = import.meta.glob('/content/**/+(*.md|*.mdx|*.jsx)', { eager: true });
-  ```
-* **Frontmatter (YAML):**
-
-  ```yaml
-  ---
-  title: "Titel"
-  date: "2025-03-10"
-  tags: ["hashtag1", "hashtag2"]   # Hashtags (Kurzlabels)
-  topics: ["Thema1", "Thema2"]     # Themen-Tags (Textkategorien)
-  excerpt: "Kurzer Teaser."
-  cover: "/images/cover.jpg"
-  ---
-  ```
-* **Index sammelt:** `slug, title, excerpt, date, tags, topics, autoHashtags, cover, content (plain + mdx render fn)`
-
-### 4) Hashtags & Themen-Tags
-
-* **Hashtags:** Frontmatter **+ Auto-Extraktion** (Stopwort-Filter, Normalisierung, Top-N, z. B. 5)
-* **Topics:** textuelle Kategorien (z. B. „Frontend“, „Barrierefreiheit“)
-* **UI:**
-
-  * **Hashtags** als **Filter-Chips** (kombinierbar)
-  * **Topics** als **Badges**/**Filter** (separat klar gekennzeichnet)
-
-### 5) Suche
-
-* **Fuse.js** mit Schlüsseln: `title`, `excerpt`, `body`, `tags`, `topics`
-* **Debounce:** ~**250 ms** in `<SearchBar>`
-* **Ergebnisse:** eigene Seite `/search` + Komponente `<SearchResults>`
-
-### 6) SEO & Feeds
-
-* **Defaults in `<Seo>`** (Titel-Template, OG/Twitter, Canonical)
-* **Seitenweise überschreibbar** (Blogpost: `og:image`, `article:published_time`, `JSON-LD` `BlogPosting`)
-* **/sitemap.xml** & **/rss.xml**: zur Build-Zeit generieren (Node-Script)
-* **JSON-LD**: `<script type="application/ld+json">`
-
-### 7) Tests & CI
-
-* **Unit (Vitest):** `hashtag.js` (Extraktor-Heuristiken)
-* **Component (RTL):** Theme-Toggle, TagChips, SearchBar
-* **E2E (Playwright):** Theme-Toggle, Suche, Filter, Responsiveness
-* **A11y:** `axe` (bei Unit/Component), `pa11y` gegen Preview/Build
-* **GitHub Actions:** Node LTS, `npm ci`, Lint → Build → Test → A11y
-
-## 🧪 Beispiel-Content (ca. 10 Posts)
-
-Lege unter `/content/blog` realistische Posts an (200–600 Wörter, gern mit Codeblöcken), z. B.:
-
-* `2025-01-hello-react.md` – topics: Frontend, React
-* `2025-01-responsive-design.mdx` – topics: CSS, Responsive
-* `2025-02-darkmode-theming.md` – topics: Designsysteme, Dark-Mode
-* `2025-02-content-architektur.md` – topics: Content-Architektur
-* `2025-03-auto-hashtags.mdx` – topics: NLP, Metadaten
-* `2025-03-performance-tuning.md` – topics: Leistung
-* `2025-04-seo-tipps.md` – topics: SEO
-* `2025-04-ux-im-web.md` – topics: UX-Optimierung
-* `2025-05-barrierefreiheit-check.md` – topics: Barrierefreiheit
-* `2025-05-deployment-vercel.jsx` – topics: Deployment (als JSX-Seite mit Frontmatter-Block im Kommentar)
-
-## 🧭 Dokustandard (Lehrmodus – sehr wichtig!)
-
-* **Datei-Header-Kommentar:** Zweck, Kontext, Haupt-Exports, Abhängigkeiten
-* **Funktions-Header (JSDoc):** Beschreibung, Parameter, Rückgabe, Randbedingungen, Beispiel
-* **Inline-Kommentare:** *Warum* (Designentscheidungen, Trade-offs)
-* **Abschnitts-Banner:** `// ── Abschnitt: …`
-* **Komponenten-Header:** „Props erklärt“, „State erklärt“, „UI-Logik“, „A11y-Hinweise“
-* **Gotchas:** SSR/CSR, MDX-Fallstricke, Vite-`import.meta.glob`
-* **/docs:** Schritt-für-Schritt-Lernpfad (Start → Build → Content → Suche → Deployment) + FAQ
-
-**Beispiel-JSDoc:**
-
-```js
-/**
- * Erzeugt Auto-Hashtags aus einem Text.
- * Warum: Junior-freundliche Einführung in einfache NLP-Heuristiken (Häufigkeit, Stopwörter).
- * @param {string} text Volltext (Markdown bereits bereinigt)
- * @param {{ max?: number }} [opts] Optionen; Anzahl der gewünschten Hashtags (Default: 5)
- * @returns {string[]} Liste von Strings ohne '#'
- * @example
- *   extractHashtags("React ist schnell und deklarativ", { max: 3 })
- */
-export function extractHashtags(text, opts = { max: 5 }) { /* ... */ }
-```
-
-## ✅ Akzeptanzkriterien
-
-* Startet direkt:
-
-  ```
-  npm install
-  npm run dev
-  ```
-* Theme folgt System; Toggle mit Persistenz; `<meta name="theme-color">` dynamisch
-* Mobile/Desktop-Layouts schalten korrekt; **Container-Queries aktiv**
-* `/blog` listet alle ~10 Posts; Detailseiten funktionieren
-* **Hashtags & Topics** sichtbar und kombinierbar filterbar
-* **Suche** liefert passende Treffer (Titel/Body/Tags/Topics)
-* **SEO/Sitemap/RSS/JSON-LD** vorhanden
-* **Tests & A11y** in CI grün
-* **Kommentardeckung:** jede Datei + zentrale Funktionen/Komponenten ausführlich dokumentiert
-* **README.md** + `/docs` vollständig
-
-## 📘 README.md (vom Agent zu erzeugen)
-
-Enthält:
-
-* Projektüberblick & Zielgruppe (Junior-freundlich)
-* Features & Architektur (ASCII-Diagramm ok)
-* Setup (Node-Version, Skripte: `dev`, `build`, `preview`, `test`, `test:e2e`, `test:a11y`)
-* Ordnerstruktur & wichtige Dateien
-* **Content-Guide** (neue Posts, Frontmatter, Topics vs. Tags)
-* **Theming & Responsiveness** (Funktionsweise, Anpassung)
-* **Suche & Filter** (Fuse-Konfiguration, Erweiterungen)
-* Qualitätssicherung (ESLint/Prettier optional), Tests, A11y
-* Deployment (Vercel)
-* FAQ & Troubleshooting
-* Lizenz & Autor
-
-## 📝 Abschließender Befehl an den Codex-Agent
-
-> **Erzeuge ein einsprachiges React-Projekt (Vite, JavaScript, CSS) im Lehrmodus:**
-> – **kompletter Code ausführlich kommentiert** (Datei-Header, JSDoc, Inline),
-> – **automatisches Theming**, **responsives Layout** (Container-Queries, Fluid Type),
-> – **Content-Autodiscovery** (`.md`, `.mdx`, optional `.jsx`), **Hashtags** + **Themen-Tags**,
-> – **Suche (Fuse.js)** über Titel/Body/Tags/Topics,
-> – **SEO/Sitemap/RSS/JSON-LD**,
-> – **Tests & CI** (Vitest, RTL, Playwright, axe/pa11y),
-> – **~10 Beispiel-Posts**.
-> Stelle sicher, dass das Projekt nach der Generierung sofort lauffähig ist (`npm install && npm run dev`) und eine umfangreiche **README.md** + `/docs`-Tutorials enthält.
+> **MASTER-PROMPT (Copy & Paste)**
+>
+> Erzeuge ein **einsprachiges React-(Vite)-Projekt** (nur **JavaScript** & **CSS**, **ohne** TypeScript/Tailwind) im **Lehrmodus**: Der gesamte Code ist **ausführlich kommentiert** (Datei-Header, JSDoc, Inline-Erklärungen, Abschnitts-Banner). Zielgruppe sind Junior-Entwickler.
+>
+> ---
+>
+> ## 1) Projektziele & UX
+>
+> * **Automatisches Theming**: Light/Dark/System; beachte `prefers-contrast` & `prefers-reduced-motion`; Nutzer-Auswahl via `localStorage` persistieren; dynamisches `<meta name="theme-color">`.
+> * **Responsives Layout**: Mobile-First, CSS-Breakpoints, **Container-Queries**, **Fluid Typography** mit `clamp()`.
+>   Zwei Navigationen: **MobileNav** (Bottom-Bar `< lg`) & **DesktopNav** (Sidebar `≥ lg`).
+> * **Content-Autodiscovery**: via
+>   `import.meta.glob('/content/**/+(*.md|*.mdx|*.jsx)', { eager: true })`
+>   mit Frontmatter:
+>
+>   ```yaml
+>   ---
+>   title: "Titel"
+>   date: "YYYY-MM-DD"
+>   tags: ["kurzlabel1","kurzlabel2"]    # Hashtags (Kurzlabels)
+>   topics: ["Thema1","Thema2"]          # Themen-Kategorien (Text)
+>   excerpt: "Kurzer Teaser."
+>   cover: "/images/cover.jpg"
+>   ---
+>   ```
+>
+>   Index speichert: `slug, title, excerpt, date, tags, topics, autoHashtags, cover, body (plain), render (MDX/JSX-Komponente)`.
+> * **Hashtags & Topics**:
+>
+>   * Hashtags = `tags` aus Frontmatter **+ Auto-Extraktion** aus Body (Stopwort-Filter, Normalisierung, Top-N=5).
+>   * Topics = textuelle Kategorien (z. B. „Frontend“, „Barrierefreiheit“).
+>   * UI: kombinierbare Filter (Chips/Badges); klare visuelle Unterscheidung.
+> * **Suche (Clientseitig)**: **Fuse.js** über `title`, `excerpt`, `body`, `tags`, `topics` mit Debounce (~250 ms); Suchseite `/search` + Komponenten `SearchBar` & `SearchResults`.
+> * **SEO & Feeds**: Standard-Meta (Title-Template, Description, OG/Twitter, Canonical) je Seite überschreibbar; **/sitemap.xml**, **/rss.xml**; **JSON-LD** (`BlogPosting`) auf Detailseiten.
+> * **Doku**: Umfangreiche **README.md** + `/docs` Lernpfad (5 Kapitel).
+>
+> ---
+>
+> ## 2) Always-Latest-Paketstrategie
+>
+> * Installiere initial **neuestes** Ökosystem:
+>
+>   ```bash
+>   npm i react@latest react-dom@latest react-router-dom@latest \
+>         react-helmet-async@latest fuse.js@latest @mdx-js/react@latest
+>   npm i -D @mdx-js/rollup@latest npm-check-updates@latest
+>   ```
+> * Ergänze in `package.json`:
+>
+>   ```json
+>   {
+>     "scripts": {
+>       "dev": "vite",
+>       "build": "vite build",
+>       "preview": "vite preview",
+>       "update:check": "ncu",
+>       "update:apply": "ncu -u && npm i"
+>     },
+>     "engines": {
+>       "node": ">=20.0.0",
+>       "npm": ">=10.0.0"
+>     }
+>   }
+>   ```
+> * README-Abschnitt „Pakete aktuell halten“ mit Workflow:
+>
+>   ```bash
+>   npm run update:check
+>   npm run update:apply
+>   ```
+>
+> ---
+>
+> ## 3) Projektstruktur (erzwingen)
+>
+> ```
+> /src
+>   /routes
+>     /blog/[slug].jsx
+>     /blog/index.jsx
+>     /tags/index.jsx
+>     /search/index.jsx
+>     /_layout/Layout.jsx
+>     /_layout/Seo.jsx
+>     /index.jsx
+>   /components
+>     ContentCard.jsx
+>     TagChips.jsx
+>     ThemeToggle.jsx
+>     SearchBar.jsx
+>     SearchResults.jsx
+>     MobileNav.jsx
+>     DesktopNav.jsx
+>   /lib/content
+>     index.js           # Scannen/Indexieren (stark kommentiert)
+>     hashtag.js         # Auto-Hashtags (stark kommentiert)
+>     stopwords.de.txt
+>   /styles
+>     globals.css
+>     layout.css
+>     typography.css
+>     components.css
+>   main.jsx
+>   App.jsx
+> /content/blog            # ~10 Beispielposts
+> /public/images
+> /scripts/generate-feeds.mjs
+> /docs
+>   01-uebersicht.md
+>   02-architektur.md
+>   03-content-workflow.md
+>   04-styling-und-theming.md
+>   05-suche-und-filter.md
+> README.md
+> vite.config.js
+> ```
+>
+> ---
+>
+> ## 4) Implementierungsdetails (Pflichtenheft)
+>
+> ### 4.1 Layout & Navigation
+>
+> * `Layout.jsx`: App-Shell mit Landmark-Regionen (`header`, `nav`, `main`, `footer`), **Skip-Link**, dynamische Theme-Klasse (`data-theme` auf `<html>` oder `<body>`), `<HelmetProvider>` + `<Seo>`.
+> * `MobileNav.jsx` (Bottom-Bar, `< lg`) & `DesktopNav.jsx` (Sidebar, `≥ lg`) mit ARIA-Labels, sichtbarem Fokus & Tastatur-Support.
+> * **CSS**:
+>
+>   * `globals.css`: Reset, Farb-/Spacing-Variablen, Fokus-Styles, Utility-Container, Motion-Reduktion.
+>   * `typography.css`: Fluid Type via `clamp()`, Prosa-Stile, Code-Blöcke.
+>   * `layout.css`: Grids, Breakpoints, Container-Queries.
+>   * `components.css`: Chips, Cards, Badges, Buttons.
+>
+> ### 4.2 Theming
+>
+> * Variablen in `:root` (Light) + `[data-theme="dark"]` (Dark).
+> * System-Erkennung (`prefers-color-scheme`), **ThemeToggle.jsx**: Light/Dark/System, Persistenz via `localStorage`.
+> * `react-helmet-async`: `<meta name="theme-color">` je Theme setzen.
+> * Beachte `prefers-contrast: more` & `prefers-reduced-motion: reduce`.
+>
+> ### 4.3 Content-Autodiscovery
+>
+> * `lib/content/index.js` nutzt `import.meta.glob('/content/**/+(*.md|*.mdx|*.jsx)', { eager: true })`.
+> * Für `.md/.mdx`: Frontmatter lesen; für `.jsx`: Frontmatter als Kommentarblock am Dateianfang erlauben (Parser bereitstellen).
+> * Exporte:
+>
+>   * `getAllPosts(): Post[]` (sortiert `date desc`),
+>   * `getPostBySlug(slug): Post`.
+> * **Post-Schema**:
+>
+>   ```ts
+>   type Post = {
+>     slug: string;
+>     title: string;
+>     excerpt: string;
+>     date: string;      // ISO
+>     tags: string[];
+>     topics: string[];
+>     autoHashtags: string[];
+>     cover?: string;
+>     body: string;      // plain text für Suche
+>     render: React.ComponentType; // MDX/JSX-Komponente
+>   };
+>   ```
+>
+> ### 4.4 Auto-Hashtags
+>
+> * `lib/content/hashtag.js`:
+>
+>   ```js
+>   /**
+>    * Extrahiert Auto-Hashtags aus Text.
+>    * - Lowercase, Tokenize, Stopwörter filtern (stopwords.de.txt)
+>    * - Umlaute/Diakritika normalisieren
+>    * - Häufigkeiten zählen, Top-N (Default 5)
+>    * @param {string} text
+>    * @param {{ max?: number }} [opts]
+>    * @returns {string[]}
+>    */
+>   export function extractHashtags(text, opts = { max: 5 }) { /* ... */ }
+>   ```
+> * In `index.js` `autoHashtags` berechnen und mit Frontmatter-`tags` de-duplizieren.
+>
+> ### 4.5 Blog-Routen & Komponenten
+>
+> * `/routes/blog/index.jsx`: Liste, Grid/Kartenlayout, Sort `date desc`, simple Pagination/„Mehr laden“.
+> * `/routes/blog/[slug].jsx`: Content-Rendering (MDX/MD/JSX), Cover, Meta (Tags/Topics), **JSON-LD BlogPosting**.
+> * `ContentCard.jsx`: Cover, Titel, Datum, Excerpt, Chips/Badges.
+> * `TagChips.jsx`: Mehrfach-Filter (togglebar), unterscheide visuell **tags** (Hashtags) und **topics** (Badges).
+>
+> ### 4.6 Suche (Fuse.js)
+>
+> * `SearchBar.jsx`: Eingabe + Debounce (~250 ms), Weiterleiten auf `/search?q=...`.
+> * `/routes/search/index.jsx` + `SearchResults.jsx`: Fuse-Index über `title`, `excerpt`, `body`, `tags`, `topics`; Score & Snippets anzeigen.
+>
+> ### 4.7 SEO & Feeds
+>
+> * `Seo.jsx`: Defaults (Titel-Template, Description, OG/Twitter, Canonical), Props zur Überschreibung.
+> * `scripts/generate-feeds.mjs`: zur Build-Zeit `dist/sitemap.xml` & `dist/rss.xml` aus `getAllPosts()` generieren. In `package.json`:
+>
+>   ```json
+>   { "scripts": { "postbuild": "node scripts/generate-feeds.mjs" } }
+>   ```
+> * Blog-Detail: `<script type="application/ld+json">` mit `BlogPosting`.
+>
+> ### 4.8 Beispiel-Content (~10 Posts)
+>
+> Lege unter `/content/blog` realistische Inhalte (200–600 Wörter) an:
+>
+> * `2025-01-hello-react.md` – topics: Frontend, React
+> * `2025-01-responsive-design.mdx` – topics: CSS, Responsive
+> * `2025-02-darkmode-theming.md` – topics: Designsysteme, Dark-Mode
+> * `2025-02-content-architektur.md` – topics: Content-Architektur
+> * `2025-03-auto-hashtags.mdx` – topics: NLP, Metadaten
+> * `2025-03-performance-tuning.md` – topics: Leistung
+> * `2025-04-seo-tipps.md` – topics: SEO
+> * `2025-04-ux-im-web.md` – topics: UX-Optimierung
+> * `2025-05-barrierefreiheit-check.md` – topics: Barrierefreiheit
+> * `2025-05-deployment-vercel.jsx` – topics: Deployment (JSX, Frontmatter als Kommentar)
+>
+> ---
+>
+> ## 5) Lehrmodus-Dokustandard (verpflichtend)
+>
+> * **Datei-Header** (Zweck, Kontext, Haupt-Exports, Abhängigkeiten).
+> * **JSDoc** an jeder Funktion (Was/Warum, Params, Return, Beispiel).
+> * **Inline-Kommentare** mit Begründungen (Trade-offs, SSR/CSR-Hinweise).
+> * **Abschnitts-Banner**: `// ── Abschnitt: …`
+> * Komponenten-Header: **Props**, **State**, **UI-Logik**, **A11y-Hinweise**, **Gotchas**.
+>
+> ---
+>
+> ## 6) README & `/docs`
+>
+> * **README.md** (Junior-freundlich): Überblick, Features, Architektur (ASCII-Skizze), Setup (Node-Version, Skripte), Ordnerstruktur, Content-Guide, Theming, Responsiveness, Suche/Filter, **„Pakete aktuell halten“** (mit `update:check`/`update:apply`), Deployment (Vercel), FAQ/Troubleshooting, Lizenz.
+> * `/docs/01..05`:
+>
+>   1. Übersicht & Lernziele
+>   2. Architektur & Datenfluss
+>   3. Content-Workflow (Frontmatter, MD/MDX/JSX, Slugs)
+>   4. Styling & Theming (Variablen, Fluid Type, Container-Queries)
+>   5. Suche & Filter (Fuse-Tuning, Erweiterungen)
+>
+> ---
+>
+> ## 7) Akzeptanzkriterien (ohne Tests/CI)
+>
+> * `npm install && npm run dev` startet; Routen **Home/Blog/Tags/Suche** funktionieren.
+> * Theme folgt System; Toggle persistiert; `<meta name="theme-color">` wechselt korrekt.
+> * Responsiv: MobileNav ↔ DesktopNav; Karten/Listen per Container-Queries.
+> * `/blog` listet ~10 Posts; Detailseiten rendern MD/MDX/JSX inkl. Cover, Datum, Tags/Topics.
+> * **Filter** (Tags + Topics) kombinierbar; **Suche** liefert sinnvolle Treffer.
+> * **SEO/Feeds**: Defaults, pro Seite überschreibbar; `/sitemap.xml`, `/rss.xml`, Blog-`JSON-LD` vorhanden.
+> * **README.md** + **/docs** vollständig; Abschnitt „Pakete aktuell halten“ vorhanden.
+>
+> ---
+>
+> ## 8) Startbefehle (ins Projekt integrieren & in README dokumentieren)
+>
+> ```bash
+> npm i
+> npm run dev
+> # optional direkt alles aktualisieren:
+> npm run update:apply
+> ```
 
 ---
+
+Wenn du möchtest, packe ich dir als Nächstes einen **Minimal-Seed (Schritte 1–4, sofort lauffähig)** mit den wichtigsten Dateien direkt hier in den Chat.
