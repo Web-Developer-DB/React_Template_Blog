@@ -4,7 +4,7 @@ Ein didaktisches Projekt, das zeigt, wie du ein modernes Blog-Frontend mit React
 
 ## Highlights
 
-- 🌗 **Automatisches Theming** (Light/Dark/System) inkl. `meta[name="theme-color"]`, Persistenz und Rücksicht auf `prefers-contrast` & `prefers-reduced-motion`.
+- 🌗 **Automatisches Theming** (Light/Dark/System) inkl. `meta[name="theme-color"]`, Persistenz und Rücksicht auf `prefers-contrast` & `prefers-reduced-motion`; der Theme-Toggle ist ein einzelner zyklischer Button, der die Modi durchschaltet.
 - 📱 **Responsive Layouts** mit Mobile-First-Ansatz, Desktop-Sidebar und hamburgergestützter Mobilnavigation, unterstützt von Container Queries und Fluid Typography.
 - 🧭 **Content-Autodiscovery** über `import.meta.glob`: Markdown, MDX und JSX werden automatisch indiziert, Metadaten & Auto-Hashtags inklusive.
 - 🔎 **Clientseitige Suche** mit Fuse.js, kombinierbaren Tag-/Topic-Filtern und Debounce-Suche.
@@ -96,7 +96,7 @@ Auto-Hashtags ergänzen deine Tags automatisch. Passe bei Bedarf `src/lib/conten
 ## Theming & Accessibility
 
 - `Layout.jsx` verwaltet `ThemeContext`.
-- ThemeToggle bietet `light`, `dark`, `system`.
+- ThemeToggle bietet `light`, `dark`, `system` über einen einzigen Button, der beim Klick zum nächsten Modus springt.
 - `prefers-reduced-motion` deaktiviert Transitionen.
 - `prefers-contrast: more` reduziert Schatten und erhöht Kontraste.
 - Meta-Farbe (`<meta name="theme-color">`) bleibt synchron, damit Browser-Chrome zum Theme passt.

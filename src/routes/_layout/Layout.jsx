@@ -196,7 +196,7 @@ function Layout() {
             <p className="brand-tagline">Von Junioren für Junioren – Schritt für Schritt.</p>
           </div>
           <div className="theme-toggle-wrapper">
-            {/* ThemeToggle liest den oben bereitgestellten Context. */}
+            {/* ThemeToggle sitzt rechts oben und schaltet per Klick den nächsten Modus. */}
             <ThemeToggle />
           </div>
         </header>

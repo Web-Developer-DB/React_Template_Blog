@@ -1,8 +1,9 @@
 /**
  * @fileoverview Theme selection control.
  * @description
- *    Presents a small segmented control that lets visitors override the system
- *    theme. The component consumes the ThemeContext provided by `Layout`.
+ *    Stellt einen zyklischen Theme-Schalter bereit. Ein einzelner Button
+ *    wechselt nacheinander zwischen Light, Dark und System. Die Komponente
+ *    konsumiert den ThemeContext aus `Layout`.
  * @module components/ThemeToggle
  */
 
@@ -15,7 +16,7 @@ import { ThemeContext } from '../routes/_layout/Layout.jsx';
 /**
  * @component ThemeToggle
  * @description
- *    Rendert einen einzelnen Button, der zwischen den Themes durchschaltet.
+ *    Rendert den Button, der beim Klick das nächste Theme aktiviert.
  *
  * @returns {JSX.Element}
  */
@@ -23,6 +24,7 @@ function ThemeToggle() {
   // `useContext` holt den aktuellen Wert aus dem Provider in Layout.jsx.
   const { preference, setPreference } = useContext(ThemeContext);
   const OPTIONS = ['light', 'dark', 'system'];
+  // Wir finden die aktuelle Position und bestimmen den nächstfolgenden Wert.
   const currentIndex = OPTIONS.indexOf(preference);
   const nextIndex = (currentIndex + 1) % OPTIONS.length;
   const nextValue = OPTIONS[nextIndex];
