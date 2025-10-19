@@ -1,4 +1,4 @@
-Alles klar — ich habe deinen ursprünglichen SvelteKit-Prompt vollständig auf **React.js + JavaScript + CSS (ohne TypeScript/Tailwind)** umgestellt. Du kannst den folgenden Prompt 1:1 an deinen Codex-/Code-Agent geben, um ein sofort lauffähiges Lern-Starterprojekt generieren zu lassen.
+
 
 ---
 
