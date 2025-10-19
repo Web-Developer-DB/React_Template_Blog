@@ -33,6 +33,7 @@ function TagChips({
   onToggle,
   compact = false,
 }) {
+  // Helper-Funktion vermeidet doppelte Button-Definition für Tags & Topics.
   const renderChip = (value, type) => {
     const isActive = type === 'tag' ? activeTags.includes(value) : activeTopics.includes(value);
 
@@ -43,8 +44,10 @@ function TagChips({
         className="tag-chip"
         data-type={type}
         data-active={isActive}
+        // `?.` schützt vor undefined, falls kein onToggle übergeben wurde.
         onClick={() => onToggle?.(value, type)}
       >
+        {/* Unterschiedliche Icons helfen beim visuellen Unterscheiden. */}
         <span aria-hidden="true">{type === 'tag' ? '#' : '⬖'}</span>
         <span>{value}</span>
       </button>
@@ -53,9 +56,11 @@ function TagChips({
 
   return (
     <div className={compact ? 'tag-chips tag-chips--compact' : 'tag-chips'}>
+      {/* Tags erscheinen zuerst, Topics danach – UI bleibt konsistent. */}
       {tags.map((tag) => renderChip(tag, 'tag'))}
       {topics.map((topic) => renderChip(topic, 'topic'))}
       {tags.length === 0 && topics.length === 0 ? (
+        // Fallback-Text erklärt, dass keine Metadaten existieren – besser als eine leere Box.
         <span className="tag-chips__empty">Keine Metadaten hinterlegt.</span>
       ) : null}
     </div>

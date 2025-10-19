@@ -41,10 +41,12 @@ const mdxComponents = {
 function BlogDetailRoute() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  // Wir ziehen den Post synchron aus dem vorab gebauten Index.
   const post = getPostBySlug(slug);
 
   const jsonLd = useMemo(() => {
     if (!post) return null;
+    // JSON-LD hilft Suchmaschinen – wir legen hier alle Pflichtfelder an.
     return {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -68,6 +70,7 @@ function BlogDetailRoute() {
     return (
       <div className="page page--blog-detail">
         <Seo title="Beitrag nicht gefunden" />
+        {/* 404-Fallback erklärt Nutzer:innen, was passiert ist und bietet Navigation zurück. */}
         <p>Ups! Für diese URL existiert kein Beitrag. Zurück zur Übersicht?</p>
         <button type="button" className="cta-button" onClick={() => navigate('/blog')}>
           Zur Blogübersicht
@@ -99,6 +102,7 @@ function BlogDetailRoute() {
         <p className="detail-date">{formatDate(post.date)}</p>
         <h1>{post.title}</h1>
         <p className="detail-excerpt">{post.excerpt}</p>
+        {/* TagChips geben direkten Zugriff auf verwandte Themen. */}
         <TagChips tags={post.tags} topics={post.topics} />
         {post.cover ? (
           <figure className="detail-cover">
@@ -110,6 +114,7 @@ function BlogDetailRoute() {
 
       <MDXProvider components={mdxComponents}>
         <div className="detail-body">
+          {/* `render` ist eine React-Komponente (MDX/JSX). Wir rendern sie wie jede andere. */}
           <PostComponent />
         </div>
       </MDXProvider>

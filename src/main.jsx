@@ -28,6 +28,7 @@ import './styles/components.css';
  * accidental side effects during development.
  */
 const container = document.getElementById('root');
+// `createRoot` startet die moderne Concurrent-Rendering-API von React 18.
 const root = createRoot(container);
 
 root.render(

@@ -40,7 +40,9 @@ function Seo({
   twitter = {},
   jsonLd,
 }) {
+  // Titel wird mit dem Seitennamen kombiniert – SEO-Best-Practice.
   const computedTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+  // Fallback-URL verhindert, dass Suchmaschinen leere hrefs sehen.
   const url = canonical ?? SITE_URL;
 
   return (

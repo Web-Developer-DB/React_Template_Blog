@@ -5,7 +5,7 @@ Ein didaktisches Projekt, das zeigt, wie du ein modernes Blog-Frontend mit React
 ## Highlights
 
 - 🌗 **Automatisches Theming** (Light/Dark/System) inkl. `meta[name="theme-color"]`, Persistenz und Rücksicht auf `prefers-contrast` & `prefers-reduced-motion`.
-- 📱 **Responsive Layouts** mit Mobile-First-Ansatz, Desktop-Sidebar und Bottom-Navigation für Mobilgeräte, unterstützt von Container Queries und Fluid Typography.
+- 📱 **Responsive Layouts** mit Mobile-First-Ansatz, Desktop-Sidebar und hamburgergestützter Mobilnavigation, unterstützt von Container Queries und Fluid Typography.
 - 🧭 **Content-Autodiscovery** über `import.meta.glob`: Markdown, MDX und JSX werden automatisch indiziert, Metadaten & Auto-Hashtags inklusive.
 - 🔎 **Clientseitige Suche** mit Fuse.js, kombinierbaren Tag-/Topic-Filtern und Debounce-Suche.
 - 🧠 **SEO & Feeds**: `react-helmet-async`, dynamische JSON-LD, automatische `sitemap.xml` und `rss.xml`.
@@ -103,7 +103,7 @@ Auto-Hashtags ergänzen deine Tags automatisch. Passe bei Bedarf `src/lib/conten
 
 ## Responsive Patterns
 
-- Mobile Bottom-Navigation (`< lg`) und Desktop-Sidebar (`≥ lg`).
+- Mobile Hamburger-Menü (`< lg`) und Desktop-Sidebar (`≥ lg`).
 - Container Queries steuern Grid-Spalten der Card-Layouts.
 - Fluid Typography via `clamp()` sorgt für harmonische Schriftgrößen.
 

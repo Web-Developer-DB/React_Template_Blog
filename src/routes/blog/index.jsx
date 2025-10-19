@@ -32,6 +32,7 @@ function BlogIndexRoute() {
   const [activeTopics, setActiveTopics] = useState([]);
 
   const allTags = useMemo(
+    // `flatMap` holt alle Tags jedes Posts, `Set` dedupliziert, `sort` für reproduzierbare Reihenfolge.
     () => Array.from(new Set(posts.flatMap((post) => post.tags))).sort(),
     [posts],
   );
@@ -42,6 +43,7 @@ function BlogIndexRoute() {
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
+      // `every` prüft, ob alle aktiven Filter auf den Post zutreffen (UND-Logik).
       const matchesTags = activeTags.every((tag) => post.tags.includes(tag));
       const matchesTopics = activeTopics.every((topic) => post.topics.includes(topic));
       return matchesTags && matchesTopics;
@@ -53,6 +55,7 @@ function BlogIndexRoute() {
 
   const handleFilterToggle = (value, type) => {
     if (type === 'tag') {
+      // Toggle-Pattern: wenn vorhanden → entfernen, sonst hinzufügen.
       setActiveTags((prev) =>
         prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
       );
@@ -86,6 +89,7 @@ function BlogIndexRoute() {
           <TagChips
             tags={allTags}
             activeTags={activeTags}
+            // Wir reichen nur den relevanten Typ weiter, so bleibt handleFilterToggle generisch.
             onToggle={(value) => handleFilterToggle(value, 'tag')}
           />
         </div>

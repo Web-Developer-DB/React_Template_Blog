@@ -26,8 +26,10 @@ import { getAllPosts } from '../lib/content/index.js';
  */
 function HomeRoute() {
   const navigate = useNavigate();
+  // `getAllPosts` liefert eine Kopie des Index; Memo vermeidet Neuaufbau bei jedem Render.
   const posts = useMemo(() => getAllPosts(), []);
 
+  // Wir zeigen nur drei Karten – `slice` kopiert die ersten Einträge.
   const latestPosts = useMemo(() => posts.slice(0, 3), [posts]);
 
   return (
@@ -49,6 +51,7 @@ function HomeRoute() {
         <div className="hero__actions">
           <SearchBar
             placeholder="Direkt loslegen: Suchbegriff tippen…"
+            // Der SearchBar-Callback navigiert zur Suchseite. encodeURIComponent verhindert kaputte URLs.
             onSearch={(value) => value && navigate(`/search?q=${encodeURIComponent(value)}`)}
           />
           <button type="button" className="cta-button" onClick={() => navigate('/blog')}>
@@ -68,6 +71,7 @@ function HomeRoute() {
 
         <div className="home-latest__grid">
           {latestPosts.map((post) => (
+            // Jede ContentCard kennt die Filter-Logik und kann direkt benutzt werden.
             <ContentCard key={post.slug} post={post} />
           ))}
         </div>

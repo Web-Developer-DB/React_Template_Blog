@@ -179,26 +179,32 @@ function Layout() {
   // ── Abschnitt: Render ───────────────────────────────────────────────────────
   return (
     <ThemeContext.Provider value={contextValue}>
+      {/* Globaler SEO-Default – einzelne Seiten überschreiben bei Bedarf. */}
       <Seo />
 
+      {/* Skip-Link hilft Keyboard-Nutzern die Navigation zu überspringen. */}
       <a className="skip-link" href="#main-content">
         Zum Inhalt springen
       </a>
 
       <div className="app-shell">
         <header className="app-header" role="banner">
-          <div className="brand">
+          <div className="brand brand--center">
             <NavLink to="/" className="brand-link">
               React Lern-Blog
             </NavLink>
             <p className="brand-tagline">Von Junioren für Junioren – Schritt für Schritt.</p>
           </div>
-          <ThemeToggle />
+          <div className="theme-toggle-wrapper">
+            {/* ThemeToggle liest den oben bereitgestellten Context. */}
+            <ThemeToggle />
+          </div>
         </header>
 
         <DesktopNav />
 
         <main id="main-content" className="app-main" role="main">
+          {/* Outlet rendert die Kinder-Routen an dieser Stelle. */}
           <Outlet />
         </main>
 

@@ -40,11 +40,13 @@ function formatDate(isoDate) {
  * @returns {JSX.Element}
  */
 function ContentCard({ post, onFilterToggle }) {
+  // Jede Karte verlinkt auf die Detailansicht des Posts. Zentraler Ort für Slug → URL.
   const linkTarget = `/blog/${post.slug}`;
 
   return (
     <article className="content-card">
       {post.cover ? (
+        // Coverbilder sind optional. Mit dem Conditional vermeiden wir leere Wrapper.
         <Link to={linkTarget} className="content-card__cover">
           <img src={post.cover} alt={`Coverbild für ${post.title}`} loading="lazy" />
         </Link>
@@ -52,6 +54,7 @@ function ContentCard({ post, onFilterToggle }) {
 
       <div className="content-card__body">
         <header>
+          {/* Datum und Titel stehen zusammen, damit Screenreader zuerst die Meta-Infos erhalten. */}
           <p className="content-card__date">{formatDate(post.date)}</p>
           <h3 className="content-card__title">
             <Link to={linkTarget}>{post.title}</Link>
@@ -60,6 +63,7 @@ function ContentCard({ post, onFilterToggle }) {
 
         <p className="content-card__excerpt">{post.excerpt}</p>
 
+        {/* TagChips erlauben, Filters aus der Liste heraus erneut zu toggeln. */}
         <TagChips
           tags={post.tags}
           topics={post.topics}

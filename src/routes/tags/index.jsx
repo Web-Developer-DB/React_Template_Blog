@@ -20,6 +20,7 @@ function buildMetaIndex(posts) {
   const topicIndex = new Map();
 
   posts.forEach((post) => {
+    // Jeder Tag/Topic erhöht seinen Zähler – so erkennen wir Beliebtheit.
     post.tags.forEach((tag) => {
       tagIndex.set(tag, (tagIndex.get(tag) ?? 0) + 1);
     });
@@ -45,6 +46,7 @@ function TagsRoute() {
   const filteredPosts = useMemo(() => {
     if (selectedTags.length === 0 && selectedTopics.length === 0) return posts;
     return posts.filter((post) => {
+      // Sobald keine Filter aktiv sind, lassen wir den Wert durch (OR).
       const tagMatch =
         selectedTags.length === 0 || selectedTags.every((tag) => post.tags.includes(tag));
       const topicMatch =
@@ -120,6 +122,7 @@ function TagsRoute() {
             type="button"
             className="cta-button cta-button--secondary"
             onClick={() => {
+              // Reset holt die komplette Liste zurück – wichtig für UX.
               setSelectedTags([]);
               setSelectedTopics([]);
             }}

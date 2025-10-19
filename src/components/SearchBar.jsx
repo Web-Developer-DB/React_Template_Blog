@@ -25,16 +25,20 @@ const DEBOUNCE_MS = 250;
  * @returns {JSX.Element}
  */
 function SearchBar({ initialQuery = '', onSearch, placeholder = 'Suche im Blog' }) {
+  // `value` spiegelt das Input-Feld wider (Controlled Component).
   const [value, setValue] = useState(initialQuery);
 
   useEffect(() => {
+    // Wenn sich die Query außerhalb ändert (z. B. Navigation), synchronisieren wir den Input.
     setValue(initialQuery);
   }, [initialQuery]);
 
   useEffect(() => {
+    // Debounce: erst nach 250 ms Inaktivität feuern wir den Callback.
     const handle = window.setTimeout(() => {
       onSearch?.(value.trim());
     }, DEBOUNCE_MS);
+    // Cleanup cancelt das Timeout, falls der Nutzer noch tippt.
     return () => window.clearTimeout(handle);
   }, [value, onSearch]);
 

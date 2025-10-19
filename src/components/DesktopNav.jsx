@@ -29,6 +29,7 @@ const NAV_ITEMS = [
  */
 function DesktopNav() {
   return (
+    // Desktop-Navigation ist eine semantische <nav>-Region.
     <nav className="desktop-nav" aria-label="Hauptnavigation">
       <ul className="desktop-nav__list">
         {NAV_ITEMS.map((item) => (
@@ -38,6 +39,7 @@ function DesktopNav() {
               end={item.to === '/'}
               className={({ isActive }) => (isActive ? 'active' : undefined)}
             >
+              {/* Icons sind rein dekorativ, daher aria-hidden. */}
               <span aria-hidden="true" className="desktop-nav__icon">
                 {item.icon}
               </span>

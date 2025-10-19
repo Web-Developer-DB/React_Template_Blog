@@ -11,46 +11,36 @@ import React, { useContext } from 'react';
 import { ThemeContext } from '../routes/_layout/Layout.jsx';
 
 // ── Abschnitt: Daten ──────────────────────────────────────────────────────────
-const OPTIONS = [
-  { value: 'light', label: 'Hell', icon: '☀️' },
-  { value: 'dark', label: 'Dunkel', icon: '🌙' },
-  { value: 'system', label: 'System', icon: '🖥️' },
-];
-
 // ── Abschnitt: Komponente ─────────────────────────────────────────────────────
 /**
  * @component ThemeToggle
  * @description
- *    Renders three buttons that switch between light/dark/system modes.
- *
- * @ui
- *    - Buttons zeigen ein Icon + Label (per CSS hidden, aber für Screenreader via SR-Only).
- *    - Aktive Auswahl erhält `aria-pressed="true"` für assistive tech.
+ *    Rendert einen einzelnen Button, der zwischen den Themes durchschaltet.
  *
  * @returns {JSX.Element}
  */
 function ThemeToggle() {
-  const { preference, resolved, setPreference } = useContext(ThemeContext);
+  // `useContext` holt den aktuellen Wert aus dem Provider in Layout.jsx.
+  const { preference, setPreference } = useContext(ThemeContext);
+  const OPTIONS = ['light', 'dark', 'system'];
+  const currentIndex = OPTIONS.indexOf(preference);
+  const nextIndex = (currentIndex + 1) % OPTIONS.length;
+  const nextValue = OPTIONS[nextIndex];
+  const iconFor = {
+    light: '☀️',
+    dark: '🌙',
+    system: '🖥️',
+  };
 
   return (
-    <div className="theme-toggle" role="group" aria-label="Theme-Einstellung">
-      {OPTIONS.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          className="theme-toggle__button"
-          data-active={preference === option.value}
-          aria-pressed={preference === option.value}
-          onClick={() => setPreference(option.value)}
-        >
-          <span aria-hidden="true">{option.icon}</span>
-          <span className="sr-only">{option.label}</span>
-        </button>
-      ))}
-      <p className="theme-toggle__status">
-        Aktives Theme: <strong>{resolved}</strong>
-      </p>
-    </div>
+    <button
+      type="button"
+      className="theme-toggle__button"
+      aria-label={`Theme wechseln, aktuell ${preference}`}
+      onClick={() => setPreference(nextValue)}
+    >
+      <span aria-hidden="true">{iconFor[preference]}</span>
+    </button>
   );
 }
 

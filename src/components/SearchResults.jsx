@@ -45,10 +45,12 @@ function buildSnippet(body, query) {
  */
 function SearchResults({ query, results, onFilterToggle }) {
   if (!query) {
+    // Lernhilfe: Ohne Suchbegriff erklären wir, welche Felder durchsucht werden.
     return <p className="search-results__placeholder">Starte oben eine Suche, wir durchsuchen Titel, Auszüge, Tags und Topics.</p>;
   }
 
   if (results.length === 0) {
+    // Die Fehlermeldung macht Mut weiterzuprobieren – wichtig für UX.
     return <p className="search-results__empty">Keine Treffer für „{query}“. Versuche andere Begriffe oder prüfe die Schreibweise.</p>;
   }
 
@@ -61,8 +63,10 @@ function SearchResults({ query, results, onFilterToggle }) {
               <h3>
                 <Link to={`/blog/${item.slug}`}>{item.title}</Link>
               </h3>
+              {/* Fuse gibt Scores von 0 (perfekt) bis 1 (schlecht) zurück – wir drehen es um. */}
               <p className="search-results__meta">Relevanz-Score: {(1 - score).toFixed(2)}</p>
             </header>
+            {/* Snippet zeigt ein paar Wörter rund um den Treffer, damit Leser den Kontext sehen. */}
             <p className="search-results__snippet">{buildSnippet(item.body, query)}</p>
             <TagChips
               tags={item.tags}

@@ -36,18 +36,11 @@
   box-shadow: none;
 }
 
-.theme-toggle {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: flex-end;
-}
-
 .theme-toggle__button {
   background: transparent;
   border: 1px solid var(--color-border);
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.7rem;
+  height: 2.7rem;
   border-radius: 0.75rem;
   display: grid;
   place-items: center;
@@ -55,15 +48,8 @@
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.theme-toggle__button[data-active='true'] {
-  background: rgba(37, 99, 235, 0.2);
-  transform: translateY(-2px);
-}
-
 .theme-toggle__status {
-  margin: 0;
-  font-size: var(--font-size-small);
-  color: var(--color-muted);
+  display: none;
 }
 
 .search-bar {

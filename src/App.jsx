@@ -29,7 +29,9 @@ import SearchRoute from './routes/search/index.jsx';
 function App() {
   return (
     <Routes>
+      {/* Layout erhält keine eigene URL, sondern umschließt alle Kind-Routen. */}
       <Route element={<Layout />}>
+        {/* `index` entspricht dem Pfad "/" */}
         <Route index element={<HomeRoute />} />
         <Route path="blog" element={<BlogIndexRoute />} />
         <Route path="blog/:slug" element={<BlogDetailRoute />} />

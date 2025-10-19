@@ -34,10 +34,12 @@ function SearchRoute() {
   const [activeTags, setActiveTags] = useState([]);
   const [activeTopics, setActiveTopics] = useState([]);
 
+  // Fuse baut den Suchindex einmalig – je weniger Rebuilds, desto schneller die UI.
   const fuse = useMemo(() => new Fuse(posts, FUSE_OPTIONS), [posts]);
 
   const rawResults = useMemo(() => {
     if (!query) {
+      // Ohne Suchbegriff zeigen wir alle Posts mit neutralem Score (1 = schlecht).
       return posts.map((post) => ({ item: post, score: 1 }));
     }
     return fuse.search(query);
@@ -66,6 +68,7 @@ function SearchRoute() {
 
   const handleToggle = (value, type) => {
     if (type === 'tag') {
+      // State-Updates basieren immer auf der vorherigen Liste, damit wir keine Race Conditions bekommen.
       setActiveTags((prev) =>
         prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
       );
@@ -115,6 +118,7 @@ function SearchRoute() {
             type="button"
             className="cta-button cta-button--secondary"
             onClick={() => {
+              // Reset-Buttons gehören direkt neben Filter – das verringert Frust.
               setActiveTags([]);
               setActiveTopics([]);
             }}
