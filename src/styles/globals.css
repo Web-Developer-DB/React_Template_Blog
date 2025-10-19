@@ -1,0 +1,208 @@
+/* ============================================================================
+   Globale Basis-Styles & Theming
+   ----------------------------------------------------------------------------
+   Lehrmodus-Hinweis:
+   - Wir arbeiten mit CSS Custom Properties und überschreiben sie je Theme.
+   - `data-theme`, `data-contrast`, `data-motion` werden in Layout.jsx gesetzt.
+   - Mobile First: alle Breakpoints erweitern lediglich das Basislayout.
+   ========================================================================== */
+
+/* Reset & Box-Modell */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: inherit;
+  color: inherit;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+/* ── Theme Variablen ------------------------------------------------------- */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f5f9;
+  --color-text: #0f172a;
+  --color-muted: #475569;
+  --color-border: rgba(15, 23, 42, 0.12);
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 10px 25px rgba(15, 23, 42, 0.12);
+  --max-width: 1200px;
+  --nav-height-mobile: 64px;
+}
+
+html[data-theme='dark'] {
+  --color-primary: #60a5fa;
+  --color-primary-dark: #3b82f6;
+  --color-surface: #0f172a;
+  --color-surface-alt: #111c34;
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-border: rgba(148, 163, 184, 0.2);
+  --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.45);
+  --shadow-card: 0 10px 25px rgba(8, 47, 73, 0.6);
+}
+
+html[data-contrast='more'] {
+  --color-primary: #1d4ed8;
+  --color-primary-dark: #1e40af;
+  --color-border: currentColor;
+  --shadow-soft: none;
+  --shadow-card: none;
+}
+
+html[data-motion='reduced'] {
+  scroll-behavior: auto;
+}
+
+/* Skip Link für Screenreader/Keyboard */
+.skip-link {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, -200%);
+  background: var(--color-primary);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  transition: transform 0.2s ease;
+  z-index: 999;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+
+/* Container Utility */
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  padding-bottom: var(--nav-height-mobile);
+  background: var(--color-surface);
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr auto;
+    column-gap: 2rem;
+    padding-bottom: 0;
+  }
+}
+
+.app-header,
+.app-main,
+.app-footer {
+  padding: 1.5rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .app-header,
+  .app-main,
+  .app-footer {
+    padding: 2rem 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-header {
+    grid-column: 2 / 3;
+  }
+  .app-main {
+    grid-column: 2 / 3;
+  }
+  .app-footer {
+    grid-column: 1 / 3;
+  }
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-main {
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  border-top: 1px solid var(--color-border);
+}
+
+.brand-link {
+  font-size: clamp(1.2rem, 0.5rem + 1.5vw, 1.8rem);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-tagline {
+  margin: 0.25rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

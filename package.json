@@ -1,0 +1,32 @@
+{
+  "name": "react_template_blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "postbuild": "node scripts/generate-feeds.mjs",
+    "update:check": "ncu",
+    "update:apply": "ncu -u && npm i"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "@mdx-js/react": "^3.0.1",
+    "fuse.js": "^6.6.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.4",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@mdx-js/rollup": "^3.0.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "npm-check-updates": "^16.14.15",
+    "vite": "^5.2.0"
+  }
+}

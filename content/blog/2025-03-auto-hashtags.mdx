@@ -1,0 +1,31 @@
+---
+title: "Auto-Hashtags mit NLP-Light: Von Stopwörtern zu Keyword-Chips"
+date: "2025-03-04"
+tags: ["nlp","hashtags","textanalyse"]
+topics: ["NLP","Metadaten"]
+excerpt: "Ein praxisnaher Ansatz, um aus Blogtexten automatisch relevante Hashtags zu erzeugen – ohne schwere Machine-Learning-Modelle."
+cover: "/images/cover-hashtags.svg"
+---
+
+## Ziel: Relevante Stichworte ohne manuellen Aufwand
+
+Hashtags helfen beim Sortieren von Inhalten, doch sie manuell zu pflegen kostet Zeit. Die Idee: Wir kombinieren vorhandene Tags aus dem Frontmatter mit automatisch extrahierten Stichworten. Dafür brauchen wir keinen komplexen ML-Stack. Eine einfache Frequenzanalyse reicht, solange wir Stopwörter filtern und den Text sinnvoll normalisieren.
+
+```js
+const tokens = text
+  .split(/\s+/)
+  .map((token) => normalizeToken(token))
+  .filter(isMeaningfulToken);
+```
+
+Der Code stammt direkt aus `src/lib/content/hashtag.js`. Wir entfernen Diakritika, vereinheitlichen `ß` zu `ss` und ignorieren rein numerische Werte. Anschließend zählen wir Häufigkeiten und nehmen die Top-N. Das Ergebnis bleibt nachvollziehbar, was in Lernprojekten besonders wichtig ist.
+
+## Stopwörter sind der Schlüssel
+
+Eine solide Stopwortliste verhindert, dass Füllwörter wie „und“ oder „auch“ in den Ergebnissen auftauchen. Wir liefern in diesem Template eine deutschsprachige Liste mit. Du kannst sie jederzeit anpassen, wenn du andere Schwerpunkte setzt. Der Parser erwartet einen Begriff pro Zeile – simpel, aber effektiv.
+
+## UX-Tipp: Kennzeichne Auto-Hashtags
+
+Im UI mischen wir manuelle Tags und Auto-Hashtags. Damit Nutzer:innen beide Sorten unterscheiden können, bietet es sich an, unterschiedliche Farben oder Icons zu verwenden. In diesem Template bleiben wir bei einer simplen Variante (gleiche Chips), erklären den Mechanismus jedoch in der Dokumentation. Du kannst die Komponente `TagChips` leicht erweitern, um Auto-Hashtags gesondert zu markieren.
+
+Fazit: Automatisierte Metadaten erhöhen die Auffindbarkeit deiner Artikel und liefern sogar Inspiration für neue Topics. Experimentiere mit weiteren Heuristiken, z. B. dem Ausschluss besonders kurzer Wörter (`MIN_TOKEN_LENGTH`) oder der Berücksichtigung von N-Grammen. Schon mit kleinem Aufwand erzielst du große Wirkung.

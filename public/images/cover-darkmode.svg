@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title">
+  <title>Dark Mode Cover</title>
+  <rect width="1200" height="630" rx="48" fill="#0f172a" />
+  <circle cx="340" cy="280" r="150" fill="#f8fafc" opacity="0.1" />
+  <circle cx="860" cy="320" r="190" fill="#1e293b" />
+  <path d="M820 240a90 90 0 1 0 90 140 140 140 0 0 1-90-140z" fill="#fde68a" />
+  <text x="150" y="510" font-family="Inter, sans-serif" font-size="58" font-weight="600" fill="#e2e8f0">
+    Light. Dark. System.
+  </text>
+</svg>

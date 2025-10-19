@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title">
+  <title>Accessibility Check Cover</title>
+  <rect width="1200" height="630" rx="48" fill="#0ea5e9" />
+  <circle cx="400" cy="320" r="140" fill="#f0f9ff" />
+  <path d="M400 200v240M320 260h160M360 460l40-120 40 120" stroke="#0284c7" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <text x="620" y="320" font-family="Inter, sans-serif" font-size="60" font-weight="700" fill="#f0f9ff">
+    A11y Check
+  </text>
+  <text x="620" y="380" font-family="Inter, sans-serif" font-size="36" fill="#e0f2fe">
+    Keyboard • Kontrast • ARIA
+  </text>
+</svg>

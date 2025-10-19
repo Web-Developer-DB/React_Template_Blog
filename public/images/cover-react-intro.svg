@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title">
+  <title>React Intro Cover</title>
+  <defs>
+    <linearGradient id="gradReact" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="48" fill="url(#gradReact)" />
+  <g fill="#ffffff" font-family="Inter, sans-serif">
+    <text x="120" y="220" font-size="72" font-weight="700">Hello React</text>
+    <text x="120" y="300" font-size="42">Komponenten denken</text>
+    <circle cx="950" cy="300" r="140" fill="none" stroke="#60a5fa" stroke-width="12" />
+    <circle cx="950" cy="300" r="90" fill="none" stroke="#93c5fd" stroke-width="8" />
+    <circle cx="950" cy="300" r="40" fill="#60a5fa" />
+  </g>
+</svg>
